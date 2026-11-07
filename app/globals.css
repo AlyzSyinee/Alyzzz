@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* palette: red + black only (r g b) */
+  --void: 9 4 5;
+  --ember: 255 32 56;
+  --oxblood: 125 13 25;
+  --heat: 255 90 105;
+  --ash: 239 228 229;
+  --grid: 44px;
+}
+
+html { color-scheme: dark; }
+
+body {
+  min-height: 100vh;
+  background-color: rgb(var(--void));
+  background-image:
+    linear-gradient(rgb(var(--ember) / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ember) / 0.055) 1px, transparent 1px);
+  background-size: var(--grid) var(--grid);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgb(var(--oxblood) / 0.55), transparent 70%),
+    radial-gradient(ellipse at 50% 50%, transparent 35%, rgb(var(--void)) 100%);
+}
+
+::selection { background: rgb(var(--ember)); color: rgb(var(--void)); }
+
+:focus-visible { outline: 2px solid rgb(var(--heat)); outline-offset: 3px; }
+
+@layer components {
+  .field {
+    @apply w-full border border-ember/25 bg-void/70 px-4 py-3.5 text-ash outline-none transition placeholder:text-ash/30 focus:border-ember focus:shadow-[0_0_0_3px_rgb(var(--ember)/0.16)];
+  }
+
+  .btn {
+    @apply relative w-full overflow-hidden bg-ember py-4 font-display text-sm font-medium tracking-tight text-void transition hover:bg-heat active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-ember;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+
+  .card {
+    @apply relative border border-ember/20 bg-gradient-to-r from-oxblood/35 via-oxblood/10 to-transparent;
+  }
+  .card::before {
+    content: '';
+    @apply absolute inset-y-0 left-0 w-[3px] bg-ember;
+  }
+
+  .avatar-ring {
+    background: conic-gradient(from 210deg, rgb(var(--ember)), rgb(var(--oxblood)), rgb(var(--void)), rgb(var(--ember)));
+    box-shadow: 0 0 40px rgb(var(--ember) / 0.35);
+  }
+
+  .stage {
+    position: relative;
+    border: 1px solid rgb(var(--ember) / 0.18);
+    background: radial-gradient(ellipse at center, rgb(var(--oxblood) / 0.3), rgb(var(--void) / 0.65) 72%);
+  }
+  .stage::before,
+  .stage::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    border: 0 solid rgb(var(--ember));
+  }
+  .stage::before { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
+  .stage::after { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+
+  .drop {
+    @apply relative flex w-full cursor-pointer flex-col items-center justify-center gap-4 border border-dashed border-ember/35 bg-void/50 px-6 py-14 text-center transition hover:border-ember hover:bg-ember/5;
+  }
+  .drop[data-active='true'] {
+    @apply border-solid border-ember bg-ember/10 shadow-[inset_0_0_60px_rgb(var(--ember)/0.18)];
+  }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-6px); }
+  40%, 60% { transform: translateX(6px); }
+}
+.shake { animation: shake 0.5s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
